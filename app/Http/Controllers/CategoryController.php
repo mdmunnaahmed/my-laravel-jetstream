@@ -94,7 +94,7 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $update = Category::find($id)->update([
+        Category::find($id)->update([
             'category_name' => $request->category_name,
         ]);
         return redirect()->route('all.category')->with('success', 'Category Updated Successfully');
@@ -108,19 +108,19 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        $delete = Category::find($id)->delete();
+        Category::find($id)->delete();
         return redirect()->route('all.category')->with('success', 'Category Deleted Successfully');
     }
 
     public function pdelete($id)
     {
-        $delete = Category::onlyTrashed()->find($id)->forceDelete();
+        Category::onlyTrashed()->find($id)->forceDelete();
         return redirect()->route('all.category')->with('success', 'Category Permanently Deleted Successfully');
     }
 
     public function restore($id)
     {
-        $restore = Category::withTrashed()->find($id)->restore();
+        Category::withTrashed()->find($id)->restore();
         return redirect()->route('all.category')->with('success', 'Category Successfully Restored');
     }
 }

@@ -4,9 +4,6 @@
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 {{ __('Dashboard') }}
             </h2>
-            <div class="div">
-                <a href="{{ route('all.category') }}">All Category</a>
-            </div>
         </div>
     </x-slot>
 

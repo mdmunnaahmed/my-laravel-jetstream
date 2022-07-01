@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -30,6 +31,15 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     Route::get('/category/pdelete/{id}', [CategoryController::class, 'pdelete'])->name('pdelete.category');
 
     Route::get('/category/restore/{id}', [CategoryController::class, 'restore'])->name('restore.category');
+
+    // For Brand
+    Route::get('/brand/all', [BrandController::class, 'index'])->name('all.brand');
+    Route::post('/brand/store', [BrandController::class, 'store'])->name('store.brand');
+    Route::get('/brand/edit/{id}', [BrandController::class, 'edit'])->name('edit.brand');
+    Route::get('/brand/delete/{id}', [BrandController::class, 'destroy'])->name('destroy.brand');
+    Route::get('/brand/pdelete/{id}', [BrandController::class, 'pdelete'])->name('pdelete.brand');
+
+    Route::get('/brand/restore/{id}', [BrandController::class, 'restore'])->name('restore.brand');
 });
 
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {

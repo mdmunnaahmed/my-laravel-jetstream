@@ -77,7 +77,7 @@
                                 <th scope="col">SL No</th>
                                 <th scope="col">Categroy Name</th>
                                 <th scope="col">User Name</th>
-                                <th scope="col">Updated at</th>
+                                <th scope="col">Deleted at</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -87,7 +87,7 @@
                                     <td>{{ $catTrash->firstItem() + $loop->index }}</td>
                                     <td>{{ $cate->category_name }}</td>
                                     <td>{{ $cate->user->name }}</td>
-                                    <td>{{ Carbon\Carbon::parse($cate->updated_at)->diffForHumans() }}</td>
+                                    <td>{{ Carbon\Carbon::parse($cate->deleted_at)->diffForHumans() }}</td>
                                     <td>
                                         <a href="{{ route('restore.category', $cate->id) }}">Restore</a>
                                         <a href="{{ route('pdelete.category', $cate->id) }}" class="text-danger ml-2">Permanently Delete</a>
