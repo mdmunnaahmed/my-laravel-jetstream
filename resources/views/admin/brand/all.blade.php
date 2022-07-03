@@ -29,27 +29,36 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($brands as $brand)
+                            @if (count($brands) >= 1)
+                                @foreach ($brands as $brand)
+                                    <tr>
+                                        <th scope="row">{{ $brands->firstItem() + $loop->index }}</th>
+                                        <td>{{ $brand->brand_name }}</td>
+                                        <td><img src="{{ asset('img/' . $brand->brand_img) }}" alt="" style="max-width: 200px; max-height: 60px; object-fit:contain"></td>
+                                        <td>{{ Carbon\Carbon::parse($brand->created_at)->diffForHumans() }}</td>
+                                        <td>
+                                            <a href="{{ route('edit.brand', $brand->id) }}">Edit</a>
+                                            <a href="{{ route('destroy.brand', $brand->id) }}" onclick="return confirm('are you sure?')" class="text-danger ml-2">Delete</a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @else
                                 <tr>
-                                    <th scope="row">{{ $brands->firstItem() + $loop->index }}</th>
-                                    <td>{{ $brand->brand_name }}</td>
-                                    <td><img src="{{ asset('img/' . $brand->brand_img) }}" alt="" style="max-width: 200px; max-height: 60px; object-fit:contain"></td>
-                                    <td>{{ Carbon\Carbon::parse($brand->created_at)->diffForHumans() }}</td>
-                                    <td>
-                                        <a href="{{ route('edit.brand', $brand->id) }}">Edit</a>
-                                        <a href="{{ route('destroy.brand', $brand->id) }}" class="text-danger ml-2">Delete</a>
+                                    <td colspan="5" class="text-center border-0">
+                                        <p class="text-muted">No data found</p>
                                     </td>
                                 </tr>
-                            @endforeach
+                            @endif
                         </tbody>
                     </table>
                     {{ $brands->links() }}
+                    <a href="{{ route('trash.brand') }}" class="btn btn-primary">View Trash</a>
                 </div>
 
                 <div class="col-lg-4">
                     <div class="card">
                         <div class="card-header">
-                            <div class="card-title">Update Brand</div>
+                            <div class="card-title">Add Brand</div>
                         </div>
                         <div class="card-body">
                             <form action="{{ route('store.brand') }} " method="POST" enctype="multipart/form-data">
@@ -68,39 +77,11 @@
                                         <span class="text-sm text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
-                                <button type="submit" class="btn btn-primary bg-primary">Add Brand</button>
+                                <img src="{{ asset('img/') }}/{{ $brand2->brand_img ?? '' }}" alt="" style="max-width: 200px; max-height: 60px; object-fit:contain">
+                                <button type="submit" class="btn btn-primary bg-primary mt-3">Add Brand</button>
                             </form>
                         </div>
                     </div>
-                </div>
-
-                <div class="col-12 mt-5">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th scope="col">SL No</th>
-                                <th scope="col">Brand Name</th>
-                                <th scope="col">Brand Image</th>
-                                <th scope="col">Deleted at</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($brandTrash as $brand3)
-                                <tr>
-                                    <td>{{ $brandTrash->firstItem() + $loop->index }}</td>
-                                    <td>{{ $brand3->brand_name }}</td>
-                                    <td><img src="{{ asset('img/' . $brand3->brand_img) }}" alt="" style="max-width: 200px; max-height: 60px; object-fit:contain"></td>
-                                    <td>{{ Carbon\Carbon::parse($brand3->deleted_at)->diffForHumans() }}</td>
-                                    <td>
-                                        <a href="{{ route('restore.brand', $brand3->id) }}">Restore</a>
-                                        <a href="{{ route('pdelete.brand', $brand3->id) }}" class="text-danger ml-2">Permanently Delete</a>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                    {{ $brandTrash->links() }}
                 </div>
             </div>
         </div>

@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Brand;
+use App\Models\MultiPic;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Image;
 
 class BrandController extends Controller
 {
@@ -17,10 +19,61 @@ class BrandController extends Controller
     public function index()
     {
         $brands = Brand::latest()->paginate(5);
-        $brandTrash = Brand::onlyTrashed()->latest()->paginate(5);
-        return view('admin.brand.all', compact('brands', 'brandTrash'));
+        return view('admin.brand.all', compact('brands'));
     }
 
+
+    public function brandTrash()
+    {
+        $trash = Brand::onlyTrashed()->latest()->paginate(5);
+        return view('admin.brand.trash', compact('trash'));
+    }
+
+    public function multipic()
+    {
+        $multipic = MultiPic::all();
+        return view('admin.multipic.all', compact('multipic'));
+    }
+
+    public function multipicStore(Request $request)
+    {
+        $request->validate([
+            'img' => 'required',
+        ]);
+
+        $files = $request->file('img');
+        $images = array();
+
+        if ($files) {
+            foreach ($files as $file) {
+                $name = date('mdYHis') . uniqid() . '.' . $file->getClientOriginalExtension();
+                $file->move('img/', $name);
+                $newFile = $images[] = $name;
+                MultiPic::create([
+                    'img' => $newFile,
+                ]);
+            }
+        }
+        dd($newFile);
+        $form = new MultiPic();
+        $form->img = json_encode($newFile);
+
+
+        $form->save();
+        // foreach ($files as $file) {
+        //     $newFile = hexdec(uniqid()) . '.' . $file->getClientOriginalExtension();
+        //     Image::make($file)->resize(300, 200)->save('img/' . $newFile);
+
+        //     MultiPic::create([
+        //         'img' => $newFile,
+        //     ]);
+        // }
+        $message = [
+            'type' => 'success',
+            'message' => 'Multipics Uploaded Successfully'
+        ];
+        return redirect()->route('multipic')->with($message);
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -46,7 +99,7 @@ class BrandController extends Controller
 
         $file = $request->file('brand_img');
         $newFile = hexdec(uniqid()) . '.' . $file->getClientOriginalExtension();
-        $file->move('img/', $newFile);
+        Image::make($file)->resize(300, 200)->blur(15)->save('img/' . $newFile);
 
         Brand::create([
             'brand_name' => $request->brand_name,
@@ -78,9 +131,8 @@ class BrandController extends Controller
      */
     public function edit($id)
     {
-        $brands = Brand::latest()->paginate(5);
-        $brand2 = Brand::find($id);
-        return view('admin.brand.all', compact('brand2', 'brands'));
+        $brand = Brand::find($id);
+        return view('admin.brand.edit', compact('brand'));
     }
 
     /**
@@ -92,13 +144,18 @@ class BrandController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $file = $request->file('brand_img');
-        $newFile = hexdec(uniqid()) . '.' . $file->getClientOriginalExtension();
-        $file->move('img/', $newFile);
+        if ($request->file('brand_img')) {
+            $file = $request->file('brand_img');
+            $newFile = hexdec(uniqid()) . '.' . $file->getClientOriginalExtension();
+            $file->move('img/', $newFile);
 
+            Brand::find($id)->update([
+                'brand_name' => $request->brand_name,
+                'brand_img' => $newFile,
+            ]);
+        }
         Brand::find($id)->update([
             'brand_name' => $request->brand_name,
-            'brand_img' => $newFile,
         ]);
         return redirect()->route('all.brand')->with('success', 'Brand Updated Successfully');
     }
@@ -114,9 +171,20 @@ class BrandController extends Controller
         Brand::find($id)->delete();
         return redirect()->route('all.brand')->with('success', 'Brand Deleted Successfully');
     }
+    public function multipicDestroy($id)
+    {
+        $var = MultiPic::find($id)->delete();
+        return redirect()->route('multipic')->with('success', 'Pics Deleted Successfully');
+    }
+
+
     public function pdelete($id)
     {
-        Brand::onlyTrashed()->find($id)->forceDelete();
+        $deleteItem = Brand::onlyTrashed()->find($id);
+        if (file_exists('img/' . $deleteItem->brand_img)) {
+            unlink('img/' . $deleteItem->brand_img);
+        }
+        $deleteItem->forceDelete();
         return redirect()->route('all.brand')->with('success', 'Brands Permanently Deleted Successfully');
     }
 
