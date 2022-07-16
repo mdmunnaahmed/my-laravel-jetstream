@@ -21,6 +21,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
     Route::get('/category/all', [CategoryController::class, 'index'])->name('all.category');
     Route::post('/category/store', [CategoryController::class, 'store'])->name('store.category');

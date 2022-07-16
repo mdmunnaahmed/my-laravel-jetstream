@@ -1,14 +1,4 @@
 <x-app-layout>
-    <x-slot name="header">
-        <div class=" d-flex flex-wrap justify-content-between">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('All Category') }}
-            </h2>
-            <div class="div">
-                <a href="{{ route('all.category') }}">All Category</a>
-            </div>
-        </div>
-    </x-slot>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">

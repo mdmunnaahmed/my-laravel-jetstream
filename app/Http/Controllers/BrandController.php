@@ -54,12 +54,11 @@ class BrandController extends Controller
                 ]);
             }
         }
-        dd($newFile);
         $form = new MultiPic();
         $form->img = json_encode($newFile);
-
-
         $form->save();
+
+
         // foreach ($files as $file) {
         //     $newFile = hexdec(uniqid()) . '.' . $file->getClientOriginalExtension();
         //     Image::make($file)->resize(300, 200)->save('img/' . $newFile);
@@ -68,6 +67,7 @@ class BrandController extends Controller
         //         'img' => $newFile,
         //     ]);
         // }
+
         $message = [
             'type' => 'success',
             'message' => 'Multipics Uploaded Successfully'

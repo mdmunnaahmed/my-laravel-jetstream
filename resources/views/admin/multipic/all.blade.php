@@ -1,11 +1,4 @@
 <x-app-layout>
-    <x-slot name="header">
-        <div class=" d-flex flex-wrap justify-content-between">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('Dashboard') }}
-            </h2>
-        </div>
-    </x-slot>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -13,7 +6,7 @@
                 <div class="col-lg-8">
                     <div class="card">
                         <div class="card-body">
-                            <div class="d-flex flex-wrap gap-5 p-4">
+                            <div class="d-flex flex-wrap gap-4 p-4 align-items-center">
                                 @foreach ($multipic as $image)
                                     <img src="{{ asset('img/' . $image->img) }}" alt="" style="max-width: 100px">
                                     <a href="{{ route('multipic.destroy',$image->id ) }}" class="btn btn-danger">Delete Pics</a>
